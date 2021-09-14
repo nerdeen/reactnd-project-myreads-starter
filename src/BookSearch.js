@@ -40,7 +40,9 @@ render(){
               </div>
             </div>
             <div className="search-books-results">
-              <BookShelf books={this.state.searchedBooks} OnUpdate={OnUpdate}/>
+              {
+                this.state.searchedBooks.length>0&&(
+              <BookShelf books={this.state.searchedBooks} OnUpdate={OnUpdate}/>)}
             </div>
           </div>
     )

@@ -13,7 +13,6 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false,
     books:[],
     currentlyReadingBooks:[],
     wantedBooks:[],
@@ -35,69 +34,26 @@ class BooksApp extends React.Component {
         readBooks:books.filter((readBooks)=>{
           return readBooks.shelf==="read"}),          
       })
-      // console.log(this.state.books)
-      // console.log(this.state.ordinaryBooks)
-      // console.log("wantedBooks",this.state.wantedBooks)
-      // console.log("currentlyReadingBooks",this.state.currentlyReadingBooks)
-      // console.log("readBooks",this.state.readBooks)
     });
-    // this.setState((allBooks)=>({
-    //   ordinaryBooks:allBooks.books.filter((ordBooks)=>{
-    //     return ordBooks.shelf=="None"
-    //   }) 
-    //  }));
-    //  this.setState((allBooks)=>({
-    //   wantedBooks:allBooks.books.filter((wantBooks)=>{
-    //     return wantBooks.shelf=="wantToRead"
-    //   }) 
-    //  }));
-    //  this.setState((allBooks)=>({
-    //   currentlyReadingBooks:allBooks.books.filter((currBooks)=>{
-    //     return currBooks.shelf=="currentlyReading"
-    //   }) 
-    //  }));
-    //  this.setState((allBooks)=>({
-    //   readBooks:allBooks.books.filter((readBooks)=>{
-    //     return readBooks.shelf=="Read"
-    //   }) 
-    //  }));
-    //  console.log('readbooks',this.state.currentlyReadingBooks);
 
   }
-  // OrdinaryBook=()=>{
-  //   this.setState((allBooks)=>({
-  //    ordinaryBooks:allBooks.books.filter((ordBooks)=>{
-  //      return ordBooks.shelf=="None"
-  //    }) 
-  //   }))
-  // }
-  // WantedBook=(book)=>{
-  //   this.setState((allBooks)=>({
-  //     wantedBooks:allBooks.books.filter((wantBooks)=>{
-  //       return wantBooks.shelf=="Wanted"
-  //     }) 
-  //    }))
-  // }
-  // CurrentBook=()=>{
-  //   this.setState((allBooks)=>({
-  //     currentlyReadingBooks:allBooks.books.filter((currBooks)=>{
-  //       return currBooks.shelf=="CurrentlyReading"
-  //     }) 
-  //    }))
-  // }
-  // ReadBook=()=>{
-  //   this.setState((allBooks)=>({
-  //     readBooks:allBooks.books.filter((readBooks)=>{
-  //       return readBooks.shelf=="Read"
-  //     }) 
-  //    }))
-  // }
-
   ChangeShelf=(book,shelf)=>{
     BooksAPI.update(book,shelf).then(()=>{
+      BooksAPI.getAll().then((books)=>{
+        this.setState({
+          books:books,
+          ordinaryBooks:books.filter((ordBooks)=>{
+            return ordBooks.shelf==="none"}),
+          wantedBooks:books.filter((wantBooks)=>{
+            return wantBooks.shelf==="wantToRead"}),
+          currentlyReadingBooks:books.filter((currBooks)=>{
+            return currBooks.shelf==="currentlyReading"}), 
+          readBooks:books.filter((readBooks)=>{
+            return readBooks.shelf==="read"}),          
+        })
+      });
     })
   }
-
   render() {
     const { query,wantedBooks,currentlyReadingBooks,readBooks } = this.state
     // const DisplayedBoos = query === ''
@@ -107,16 +63,16 @@ class BooksApp extends React.Component {
     //     ))
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
+        
                     <Route path="/search" render={({history})=>(
                       <BookSearch query={query} OnSearch={
-                        ()=>{ this.setState({showSearchPage:false});
+                        ()=>{
                               history.push("/");
                           }} OnUpdate={this.ChangeShelf}
-                          Serach={this.state.showSearchPage}/>
+                          />
                     )} />
           
-        ) : (
+         
           <Route exact path="/" render={()=>(
             <div className="list-books">
               <div className="list-books-title">
@@ -133,11 +89,11 @@ class BooksApp extends React.Component {
                 </div>
               </div>
               <div className="open-search">
-                <Link to="/search" onClick={() => this.setState({ showSearchPage: true })}>Add a book</Link>
+                <Link to="/search"  >Add a book</Link>
               </div>
             </div>
           )} /> 
-        )}
+        
       </div>
     )
   }
