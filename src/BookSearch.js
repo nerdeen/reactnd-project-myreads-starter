@@ -11,11 +11,19 @@ class BookSearch extends Component{
 static propTypes = {
     query : PropTypes.string.isRequired,
 }
+ShowBooks=event=>{
+  const query = event.target.value;
+  this.setState({ query });
+  if(query){
+    this.SearchQuery(query);
+  }
+}
 SearchQuery=(query)=>{
     BooksAPI.search(query).then((books)=>{
+      if(books.length>0){
       this.setState({
         searchedBooks:books,
-      })
+      })}
     })
   }
 render(){
