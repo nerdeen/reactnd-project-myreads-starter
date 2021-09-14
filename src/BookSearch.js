@@ -17,6 +17,7 @@ ShowBooks=event=>{
   if(query){
     this.SearchQuery(query);
   }
+  else this.setState({ searchedBooks: [] });
 }
 SearchQuery=(query)=>{
     BooksAPI.search(query).then((books)=>{
